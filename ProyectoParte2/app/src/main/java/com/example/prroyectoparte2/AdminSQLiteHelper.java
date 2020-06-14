@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class AdminSQLiteHelper extends SQLiteOpenHelper {
     
-    @Override
+
     public AdminSQLiteHelper(Context context, String name, CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
