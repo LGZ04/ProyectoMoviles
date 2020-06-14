@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "db", null, 1);
-        SQLiteDatabase DB = getWritableDatabase();
+        SQLiteDatabase DB = admin.getWritableDatabase();
 
         Cursor consulta = DB.rawQuery("select * from puntaje where score = (select max(score) from puntaje)", null);
         if (consulta.moveToFirst()) {
