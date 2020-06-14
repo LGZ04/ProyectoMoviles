@@ -18,7 +18,8 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
     private ImageView iv_dos, iv_uno, iv_vidas;
     private TextView tv_nombre, tv_score;
     private MediaPlayer mp, mp_bad, mp_great;
-    
+    //probando
+
     int aleatorio1, aleatorio2, resultado, score, vidas = 3;
     String nombre_jugador, string_score, string_vidas;
     String[] numero = {"cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez", "once", "doce", "trece", "catorce", "quince", "dieciseis", "diecisiete", "dieciocho", "diecinueve", "veinte"};
