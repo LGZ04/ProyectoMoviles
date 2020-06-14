@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Juego de Frutas</string>
+    <string name="str_c_mo_te_llamas">Cómo te llamas?</string>
+    <string name="str_comprobar">COMPROBAR</string>
+    <string name="str_jugador">Jugador:</string>
+    <string name="str_jugar">JUGAR</string>
+    <string name="str_respuesta">Respuesta</string>
+    <string name="str_score_0">Score: 0</string>
+    <string name="str_todo">TODO</string>
+    <string name="str_vidas">Vidas:</string>
+</resources>
