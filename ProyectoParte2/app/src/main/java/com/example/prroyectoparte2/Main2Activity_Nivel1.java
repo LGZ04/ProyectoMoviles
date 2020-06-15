@@ -1,6 +1,9 @@
 package com.example.prroyectoparte2;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
@@ -8,12 +11,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Main2Activity_Nivel1 extends AppCompatActivity {
-   
+
     private EditText et_respuesta;
     private ImageView iv_dos, iv_uno, iv_vidas;
     private TextView tv_nombre, tv_score;
@@ -23,8 +27,8 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
     int aleatorio1, aleatorio2, resultado, score, vidas = 3;
     String nombre_jugador, string_score, string_vidas;
     String[] numero = {"cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez", "once", "doce", "trece", "catorce", "quince", "dieciseis", "diecisiete", "dieciocho", "diecinueve", "veinte"};
-    
-    
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +42,7 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
         et_respuesta = (EditText) findViewById(R.id.et_resultado);
 
         nombre_jugador = getIntent().getStringExtra("jugador");
-        tv_nombre.setText("Jugador: "+ nombre_jugador);
+        tv_nombre.setText("Jugador: " + nombre_jugador);
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
@@ -56,29 +60,32 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
 
         int level = 1;
 
-        if(score >= 0 && score <= 10) {
+        if (score >= 0 && score <= 10) {
             level = 1;
-        } if (score >= 11 && score <= 20){
+        }
+        if (score >= 11 && score <= 20) {
             level = 2;
-        } if(score >= 21 && score <=30){
+        }
+        if (score >= 21 && score <= 30) {
             level = 3;
-        } if(score >= 31 && score <=40) {
+        }
+        if (score >= 31 && score <= 40) {
             level = 4;
         }
 
         int randomLimit = level == 1 ? level * 10 : numero.length;
 
-        if (score >= (level-1)*10 && score <= level * 10 ) {
+        if (score >= (level - 1) * 10 && score <= level * 10) {
 
             aleatorio1 = ThreadLocalRandom.current().nextInt(0, randomLimit);
-            aleatorio2 = ThreadLocalRandom.current().nextInt(0, (level * 10 -aleatorio1));
+            aleatorio2 = ThreadLocalRandom.current().nextInt(0, (level * 10 - aleatorio1));
             resultado = aleatorio1 + aleatorio2;
-            Toast.makeText(this, + aleatorio1 + " + " + aleatorio2 + " = " + resultado , Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, +aleatorio1 + " + " + aleatorio2 + " = " + resultado, Toast.LENGTH_SHORT).show();
 
 
             if (score <= 40) {
                 for (int i = 0; i < numero.length; i++) {
-                 int id = getResources().getIdentifier(numero[i], "drawable", getPackageName());
+                    int id = getResources().getIdentifier(numero[i], "drawable", getPackageName());
                     if (aleatorio1 == i) {
                         iv_uno.setImageResource(id);
                     }
@@ -109,7 +116,6 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
     }
 
 
-
     public void evaluar(View vista) {
         String respuesta = et_respuesta.getText().toString();
 
@@ -118,34 +124,112 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
             if (resultado == respEntera) {
                 mp_great.start();
                 score++;
-                tv_score.setText("Score: "+ score);
-                
+                tv_score.setText("Score: " + score);
+
             } else {
                 mp_bad.start();
                 vidas--;
                 switch (vidas) {
                     case 1:
-                    Toast.makeText(this, "Queda 1 vida", Toast.LENGTH_SHORT).show();
-                    iv_vidas.setImageResource(R.drawable.unavida);
+                        Toast.makeText(this, "Queda 1 vida", Toast.LENGTH_SHORT).show();
+                        iv_vidas.setImageResource(R.drawable.unavida);
                         break;
-                        case 2:
-                    iv_vidas.setImageResource(R.drawable.dosvidas);
-                        break; 
-                        case 0:
+                    case 2:
+                        iv_vidas.setImageResource(R.drawable.dosvidas);
+                        break;
+                    case 0:
                         Intent intent = new Intent(this, MainActivity.class);
                         startActivity(intent);
                         mp.stop();
                         mp.release();
                         finish();
                         break;
-                    
+
                 }
             }
             this.et_respuesta.setText("");
             numeroAleatorio();
-        }else{
+        } else {
             Toast.makeText(this, "Debes dar una respuesta", Toast.LENGTH_LONG).show();
         }
-        
+
     }
+
+
+    public void insertarEnLaBase(){
+        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "administracion", null,1);
+        SQLiteDatabase baseDatos = admin.getWritableDatabase();
+        String nombre = nombre_jugador;
+        String puntuacion = tv_score.getText().toString();
+
+        ContentValues registro = new ContentValues();
+        registro.put("nombre", nombre);
+        registro.put("score", puntuacion);
+        baseDatos.insert("puntaje", null, registro);
+        baseDatos.close();
+
+    }
+    public void modificarEnLaBase(){
+        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "administracion", null,1);
+        SQLiteDatabase baseDatos = admin.getWritableDatabase();
+        String nombre = nombre_jugador;
+        String puntuacion = tv_score.getText().toString();
+        ContentValues registro = new ContentValues();
+        registro.put("nombre", nombre);
+        registro.put("score", puntuacion);
+        int cantidad = baseDatos.update("puntaje", registro, "score="+puntuacion, null);
+        baseDatos.close();
+        if(cantidad == 1){
+            Toast.makeText(this,"Se actualizo el puntaje", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(this,"No tenia puntaje que modificar", Toast.LENGTH_LONG).show();
+        }
+
+    }
+    public void eliminarEnLaBase(){
+        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "administracion", null,1);
+        SQLiteDatabase baseDatos = admin.getWritableDatabase();
+        String nombre = nombre_jugador;
+        String puntuacion = tv_score.getText().toString();
+        ContentValues registro = new ContentValues();
+        registro.put("nombre", nombre);
+        registro.put("score", puntuacion);
+        int cantidad = baseDatos.delete("puntaje", "nombre="+nombre,null);
+        if(cantidad == 1){
+            Toast.makeText(this,"Se elimino el puntaje", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this,"No tenia puntaje que modificar", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    public void consultarEnLaBase(){
+        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "administracion", null,1);
+        SQLiteDatabase baseDatos = admin.getWritableDatabase();
+        String nombre = nombre_jugador;
+        String puntuacion = tv_score.getText().toString();
+        ContentValues registro = new ContentValues();
+        registro.put("nombre", nombre);
+        registro.put("score", puntuacion);
+
+        Cursor fila = baseDatos.rawQuery("select score, nombre from puntaje where nombre ="+nombre,null);
+        if(fila.moveToFirst()) {
+            //COLOCAR LO QUE DESEA HACER CON LOS DATOS QUE OBTUVO DE LA BASE
+            tv_score.setText(fila.getString(0));
+            tv_nombre.setText(fila.getString(1));
+        }else{
+            Toast.makeText(this,"Datos no encontrados", Toast.LENGTH_SHORT).show();
+
+        }
+        baseDatos.close();
+
+    }
+
+
+
+
+
+
+
+
 }
+
