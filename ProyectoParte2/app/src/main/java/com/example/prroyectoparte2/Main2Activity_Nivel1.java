@@ -57,10 +57,10 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
 
         /*
         Codigo para cargar los archivos de auidos para los diferentes niveles
-        mp_nivel2 = MediaPlayer.create(this, R.raw.AMUSEMENT);
-        mp_nivel3 = MediaPlayer.create(this, R.raw.BOB_PARTY);
-        mp_nivel4 = MediaPlayer.create(this, R.raw.CHILDREN_S_GAMES);
-        mp_nivel2 = MediaPlayer.create(this, R.raw.AMUSEMENT);
+        mp_nivel2 = MediaPlayer.create(this, R.raw.amusement);
+        mp_nivel3 = MediaPlayer.create(this, R.raw.bob_party);
+        mp_nivel4 = MediaPlayer.create(this, R.raw.children_s_games);
+        mp_nivel2 = MediaPlayer.create(this, R.raw.amusement);
         
          */
         numeroAleatorio();
