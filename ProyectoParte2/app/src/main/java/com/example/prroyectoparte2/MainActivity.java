@@ -128,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
             return temp_score;
 
         }else{
-            Toast.makeText(this,"Datos no encontrados", Toast.LENGTH_SHORT).show();
             baseDatos.close();
             return 0;
         }

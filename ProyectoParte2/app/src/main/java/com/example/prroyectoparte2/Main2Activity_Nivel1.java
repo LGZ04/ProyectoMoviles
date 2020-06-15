@@ -205,7 +205,8 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
                     iv_vidas.setImageResource(R.drawable.dosvidas);
                         break; 
                         case 0:
-                            insertarEnLaBase();
+                            modificarInsertarEnLaBase();
+                            //insertarEnLabase
                         Intent intent = new Intent(this, MainActivity.class);
                         startActivity(intent);
                         mp.stop();
@@ -227,7 +228,6 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
         AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "db", null,1);
         SQLiteDatabase baseDatos = admin.getWritableDatabase();
         String nombre = nombre_jugador;
-        //String puntuacion = String.valueOf(score);
         int puntuacion = score;
         ContentValues registro = new ContentValues();
         registro.put("nombre", nombre);
@@ -242,22 +242,25 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
         baseDatos.close();
 
     }
-    public void modificarEnLaBase(){
+    public void modificarInsertarEnLaBase(){
         AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "db", null,1);
         SQLiteDatabase baseDatos = admin.getWritableDatabase();
-        String nombre = nombre_jugador;
-        String puntuacion = tv_score.getText().toString();
+        String nombres = nombre_jugador;
+        int puntuacion = score;
         ContentValues registro = new ContentValues();
-        registro.put("nombre", nombre);
+        registro.put("nombre", nombres);
         registro.put("score", puntuacion);
-        int cantidad = baseDatos.update("puntaje", registro, "score="+puntuacion, null);
-        baseDatos.close();
+        int cantidad = baseDatos.update("puntaje", registro, "nombre"+"='"+nombres+"'", null);
         if(cantidad == 1){
             Toast.makeText(this,"Se actualizo el puntaje", Toast.LENGTH_LONG).show();
         }else{
-            Toast.makeText(this,"No tenia puntaje que modificar", Toast.LENGTH_LONG).show();
+            long rowInserted = baseDatos.insert("puntaje", null, registro);
+            if(rowInserted != -1)
+                Toast.makeText(this, "New row added, row id: " + rowInserted, Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(this, "Something wrong", Toast.LENGTH_SHORT).show();
         }
-
+        baseDatos.close();
     }
 
 
