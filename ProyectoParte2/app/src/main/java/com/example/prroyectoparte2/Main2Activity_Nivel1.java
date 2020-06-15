@@ -1,6 +1,9 @@
 package com.example.prroyectoparte2;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
@@ -150,4 +153,75 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
         }
         
     }
+
+    public void insertarEnLaBase(){
+        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "administracion", null,1);
+        SQLiteDatabase baseDatos = admin.getWritableDatabase();
+        String nombre = nombre_jugador;
+        String puntuacion = tv_score.getText().toString();
+
+        ContentValues registro = new ContentValues();
+        registro.put("nombre", nombre);
+        registro.put("score", puntuacion);
+        baseDatos.insert("puntaje", null, registro);
+        baseDatos.close();
+
+    }
+    public void modificarEnLaBase(){
+        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "administracion", null,1);
+        SQLiteDatabase baseDatos = admin.getWritableDatabase();
+        String nombre = nombre_jugador;
+        String puntuacion = tv_score.getText().toString();
+        ContentValues registro = new ContentValues();
+        registro.put("nombre", nombre);
+        registro.put("score", puntuacion);
+        int cantidad = baseDatos.update("puntaje", registro, "score="+puntuacion, null);
+        baseDatos.close();
+        if(cantidad == 1){
+            Toast.makeText(this,"Se actualizo el puntaje", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(this,"No tenia puntaje que modificar", Toast.LENGTH_LONG).show();
+        }
+
+    }
+    public void eliminarEnLaBase(){
+        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "administracion", null,1);
+        SQLiteDatabase baseDatos = admin.getWritableDatabase();
+        String nombre = nombre_jugador;
+        String puntuacion = tv_score.getText().toString();
+        ContentValues registro = new ContentValues();
+        registro.put("nombre", nombre);
+        registro.put("score", puntuacion);
+        int cantidad = baseDatos.delete("puntaje", "nombre="+nombre,null);
+        if(cantidad == 1){
+            Toast.makeText(this,"Se elimino el puntaje", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this,"No tenia puntaje que modificar", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    public void consultarEnLaBase(){
+        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "administracion", null,1);
+        SQLiteDatabase baseDatos = admin.getWritableDatabase();
+        String nombre = nombre_jugador;
+        String puntuacion = tv_score.getText().toString();
+        ContentValues registro = new ContentValues();
+        registro.put("nombre", nombre);
+        registro.put("score", puntuacion);
+
+        Cursor fila = baseDatos.rawQuery("select score, nombre from puntaje where nombre ="+nombre,null);
+        if(fila.moveToFirst()) {
+            //COLOCAR LO QUE DESEA HACER CON LOS DATOS QUE OBTUVO DE LA BASE
+            tv_score.setText(fila.getString(0));
+            tv_nombre.setText(fila.getString(1));
+        }else{
+            Toast.makeText(this,"Datos no encontrados", Toast.LENGTH_SHORT).show();
+
+        }
+        baseDatos.close();
+
+    }
+
+
+
 }
