@@ -93,21 +93,23 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
             level = 2;
             operacionAleatorio =  getRandomNumberInRange(0,1);
             //   Toast.makeText(this, "level 2 - Operacion : " + operaciones[operacionAleatorio] , Toast.LENGTH_SHORT).show();
-
-            int id = getResources().getIdentifier(operaciones[operacionAleatorio], "drawable", getPackageName());
+            operacion = operaciones[operacionAleatorio];
+            int id = getResources().getIdentifier(operacion, "drawable", getPackageName());
             iv_signo.setImageResource(id);
 
         } if(score >= 21 && score <=30){
             level = 3;
-            operacionAleatorio = getRandomNumberInRange(0,2);
+            operacionAleatorio = getRandomNumberInRange(0,1);
             //    Toast.makeText(this, "level 3 - Operacion : " + operaciones[operacionAleatorio] , Toast.LENGTH_SHORT).show();
-            int id = getResources().getIdentifier(operaciones[operacionAleatorio], "drawable", getPackageName());
+            operacion = operaciones[operacionAleatorio];
+            int id = getResources().getIdentifier(operacion, "drawable", getPackageName());
             iv_signo.setImageResource(id);
         } if(score >= 31 && score <=40) {
             level = 4;
             operacionAleatorio = getRandomNumberInRange(0,2);
             //   Toast.makeText(this, "level 4 - Operacion : " + operaciones[operacionAleatorio] , Toast.LENGTH_SHORT).show();
-            int id = getResources().getIdentifier(operaciones[operacionAleatorio], "drawable", getPackageName());
+            operacion = operaciones[operacionAleatorio];
+            int id = getResources().getIdentifier(operacion, "drawable", getPackageName());
             iv_signo.setImageResource(id);
         }
 
@@ -116,11 +118,30 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
         if (score >= (level-1)*10 && score <= level * 10 ) {
 
             aleatorio1 = ThreadLocalRandom.current().nextInt(0, randomLimit);
-
             int aleatorio2Limit = randomLimit - aleatorio1;
-
             aleatorio2 = ThreadLocalRandom.current().nextInt(0, aleatorio2Limit);
-            resultado = aleatorio1 + aleatorio2;
+
+            if(aleatorio2 > aleatorio1 && operacion == "resta") {
+                aleatorio1 = aleatorio2;
+                aleatorio2 = aleatorio1;
+
+            }
+
+
+            if(operacion == "adicion"){
+                resultado = aleatorio1 + aleatorio2;
+            }
+
+            if(operacion == "resta"){
+                resultado = aleatorio1 - aleatorio2;
+            }
+
+            if(operacion == "multiplicacion"){
+                resultado = aleatorio1 * aleatorio2;
+            }
+
+
+
             Toast.makeText(this, + aleatorio1 + " + " + aleatorio2 + " = " + resultado , Toast.LENGTH_SHORT).show();
 
 
