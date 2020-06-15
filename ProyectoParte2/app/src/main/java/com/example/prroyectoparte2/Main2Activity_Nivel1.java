@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Main2Activity_Nivel1 extends AppCompatActivity {
@@ -71,7 +70,10 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
         if (score >= (level-1)*10 && score <= level * 10 ) {
 
             aleatorio1 = ThreadLocalRandom.current().nextInt(0, randomLimit);
-            aleatorio2 = ThreadLocalRandom.current().nextInt(0, (level * 10 -aleatorio1));
+
+            int aleatorio2Limit = randomLimit - aleatorio1;
+
+            aleatorio2 = ThreadLocalRandom.current().nextInt(0, aleatorio2Limit);
             resultado = aleatorio1 + aleatorio2;
             Toast.makeText(this, + aleatorio1 + " + " + aleatorio2 + " = " + resultado , Toast.LENGTH_SHORT).show();
 
