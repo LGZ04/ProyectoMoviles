@@ -12,12 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Main2Activity_Nivel1 extends AppCompatActivity {
    
     private EditText et_respuesta;
-    private ImageView iv_dos, iv_uno, iv_vidas;
+    private ImageView iv_dos, iv_uno, iv_vidas, iv_signo;
     private TextView tv_nombre, tv_score;
     private MediaPlayer mp, mp_bad, mp_great;
     private MediaPlayer mp_nivel2, mp_nivel3, mp_nivel4;
@@ -41,6 +43,7 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
         iv_uno = (ImageView) findViewById(R.id.iv_num1);
         iv_dos = (ImageView) findViewById(R.id.iv_num2);
         et_respuesta = (EditText) findViewById(R.id.et_resultado);
+        iv_signo = (ImageView) findViewById((R.id.iv_signo));
 
         nombre_jugador = getIntent().getStringExtra("jugador");
         tv_nombre.setText("Jugador: "+ nombre_jugador);
@@ -66,18 +69,46 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
         numeroAleatorio();
     }
 
+    private static int getRandomNumberInRange(int min, int max) {
+
+        if (min >= max) {
+            throw new IllegalArgumentException("max must be greater than min");
+        }
+
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
+    }
+
     public void numeroAleatorio() {
 
         int level = 1;
+        String operacion = "adicion";
+        String [] operaciones = {"adicion", "resta", "multiplicacion"};
+        int operacionAleatorio = 0;
+        Random random = new Random();
 
         if(score >= 0 && score <= 10) {
             level = 1;
         } if (score >= 11 && score <= 20){
             level = 2;
+            operacionAleatorio =  getRandomNumberInRange(0,1);
+            //   Toast.makeText(this, "level 2 - Operacion : " + operaciones[operacionAleatorio] , Toast.LENGTH_SHORT).show();
+
+            int id = getResources().getIdentifier(operaciones[operacionAleatorio], "drawable", getPackageName());
+            iv_signo.setImageResource(id);
+
         } if(score >= 21 && score <=30){
             level = 3;
+            operacionAleatorio = getRandomNumberInRange(0,2);
+            //    Toast.makeText(this, "level 3 - Operacion : " + operaciones[operacionAleatorio] , Toast.LENGTH_SHORT).show();
+            int id = getResources().getIdentifier(operaciones[operacionAleatorio], "drawable", getPackageName());
+            iv_signo.setImageResource(id);
         } if(score >= 31 && score <=40) {
             level = 4;
+            operacionAleatorio = getRandomNumberInRange(0,2);
+            //   Toast.makeText(this, "level 4 - Operacion : " + operaciones[operacionAleatorio] , Toast.LENGTH_SHORT).show();
+            int id = getResources().getIdentifier(operaciones[operacionAleatorio], "drawable", getPackageName());
+            iv_signo.setImageResource(id);
         }
 
         int randomLimit = level == 1 ? level * 10 : numero.length;
