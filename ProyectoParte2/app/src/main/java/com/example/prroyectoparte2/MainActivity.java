@@ -90,6 +90,36 @@ public class MainActivity extends AppCompatActivity {
         //
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState){
+        // cargamos el estado de la imagen
+       // image = savedInstanceState.getParcelable("BitmapImage");
+        //targetImage.setImageBitmap(image);
+       // textTargetUri.setText(savedInstanceState.getString("path_to_picture"));
+
+        // cargamos el estado de la musica
+
+        // cargamos el estado de los textview
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Guardamos el estado de la imagen
+
+       // savedInstanceState.putParcelable("BitmapImage", iv_personaje.getDrawable());
+       // savedInstanceState.putString("path_to_picture", picture_location);
+
+        //Guardamos el estado de los textview
+        //savedInstanceState.putString("jugador", et_nombre.getText().toString());
+        //savedInstanceState.putString("Password", mPassword);
+        // savedInstanceState.putString("UserID", mUserID);
+
+        //Guardamos el estado de la musica
+
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
 
     public void eliminarPuntajeEnLaBase(View vista){
         AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "db", null, 1);
@@ -99,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
         if (!nombres.isEmpty()) {
             int cantidad = DB.delete("puntaje", "nombre"+"='"+nombres+"'",null);
             if (cantidad == 1) {
-                metodoRecord();
                 Toast.makeText(this, "Se reinicio el puntaje", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "No tenia puntaje que reiniciar", Toast.LENGTH_SHORT).show();
@@ -111,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
             InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
             imm.showSoftInput(this.et_nombre, InputMethodManager.SHOW_IMPLICIT);
         }
+        metodoRecord();
     }
 
 
@@ -136,20 +166,18 @@ public class MainActivity extends AppCompatActivity {
     public void metodoRecord(){
         AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "db", null, 1);
         SQLiteDatabase DB = admin.getWritableDatabase();
-
+        TextView textView = tv_bestScore;
         Cursor consulta = DB.rawQuery("select nombre, score from puntaje where score = (select MAX(score) from puntaje)", null);
-        // Cursor consulta = DB.rawQuery("select nombre,MAX(score) from puntaje", null);
-        //Cursor consulta = DB.rawQuery("select nombre, score from puntaje", new String[]{});
+        
         if (consulta.moveToFirst()) {
             String temp_nombre = consulta.getString(0);
             int temp_score = consulta.getInt(1);
-            TextView textView = tv_bestScore;
+
             StringBuilder sb = new StringBuilder();
-            sb.append("Record-> Puntaje: " + temp_score + " Jugador(a): " + temp_nombre);
-            //sb.append(temp_score);
-            // sb.append(" de ");
-            //sb.append(temp_nombre);
+            sb.append("Record -> Puntaje: " + temp_score + " Jugador(a): " + temp_nombre);
             textView.setText(sb.toString());
+        }else{
+            tv_bestScore.setText("Record -> No existe ningun record, a jugar!");
         }
         DB.close();
     }

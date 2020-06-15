@@ -253,10 +253,10 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
         int cantidad = baseDatos.update("puntaje", registro, "nombre"+"='"+nombres+"'", null);
         if(cantidad == 1){
             Toast.makeText(this,"Se actualizo el puntaje", Toast.LENGTH_LONG).show();
-        }else{
+        }else{// si no existen datos que modificar, inserta el nuevo jugador
             long rowInserted = baseDatos.insert("puntaje", null, registro);
             if(rowInserted != -1)
-                Toast.makeText(this, "New row added, row id: " + rowInserted, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Se guardo la puntuacion " + rowInserted, Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(this, "Something wrong", Toast.LENGTH_SHORT).show();
         }
