@@ -127,4 +127,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    //devuelve el score del jugador
+    //se le pasa por el intent al main2Activity_nivel1
+    public int consultarJugadorEnLaBase(String jugador){
+        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "db", null,1);
+        SQLiteDatabase baseDatos = admin.getWritableDatabase();
+        String nombre = jugador;
+
+        Cursor fila = baseDatos.rawQuery("select score, nombre from puntaje where nombre ="+nombre,null);
+        if(fila.moveToFirst()){
+            int temp_score = fila.getInt(1);
+            baseDatos.close();
+            return temp_score;
+
+        }else{
+            Toast.makeText(this,"Datos no encontrados", Toast.LENGTH_SHORT).show();
+            baseDatos.close();
+            return 0;
+        }
+    }
 }
