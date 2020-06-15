@@ -8,4 +8,5 @@
     <string name="str_score_0">Score: 0</string>
     <string name="str_todo">TODO</string>
     <string name="str_vidas">Vidas:</string>
+    <string name="str_reiniciar_puntaje">Reiniciar Puntaje</string>
 </resources>

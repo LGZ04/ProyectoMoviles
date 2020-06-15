@@ -142,7 +142,7 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
 
 
 
-            Toast.makeText(this, + aleatorio1 + " + " + aleatorio2 + " = " + resultado , Toast.LENGTH_SHORT).show();
+         //   Toast.makeText(this, + aleatorio1 + " + " + aleatorio2 + " = " + resultado , Toast.LENGTH_SHORT).show();
 
 
             if (score <= 40) {
@@ -201,6 +201,7 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
                     iv_vidas.setImageResource(R.drawable.dosvidas);
                         break; 
                         case 0:
+                            insertarEnLaBase();
                         Intent intent = new Intent(this, MainActivity.class);
                         startActivity(intent);
                         mp.stop();
@@ -219,20 +220,26 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
     }
 
     public void insertarEnLaBase(){
-        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "administracion", null,1);
+        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "db", null,1);
         SQLiteDatabase baseDatos = admin.getWritableDatabase();
         String nombre = nombre_jugador;
-        String puntuacion = tv_score.getText().toString();
-
+        //String puntuacion = String.valueOf(score);
+        int puntuacion = score;
         ContentValues registro = new ContentValues();
         registro.put("nombre", nombre);
         registro.put("score", puntuacion);
-        baseDatos.insert("puntaje", null, registro);
+        long rowInserted = baseDatos.insert("puntaje", null, registro);
+
+        if(rowInserted != -1)
+            Toast.makeText(this, "New row added, row id: " + rowInserted, Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, "Something wrong", Toast.LENGTH_SHORT).show();
+
         baseDatos.close();
 
     }
     public void modificarEnLaBase(){
-        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "administracion", null,1);
+        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "db", null,1);
         SQLiteDatabase baseDatos = admin.getWritableDatabase();
         String nombre = nombre_jugador;
         String puntuacion = tv_score.getText().toString();
@@ -248,42 +255,23 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
         }
 
     }
-    public void eliminarEnLaBase(){
-        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "administracion", null,1);
-        SQLiteDatabase baseDatos = admin.getWritableDatabase();
-        String nombre = nombre_jugador;
-        String puntuacion = tv_score.getText().toString();
-        ContentValues registro = new ContentValues();
-        registro.put("nombre", nombre);
-        registro.put("score", puntuacion);
-        int cantidad = baseDatos.delete("puntaje", "nombre="+nombre,null);
-        if(cantidad == 1){
-            Toast.makeText(this,"Se elimino el puntaje", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(this,"No tenia puntaje que modificar", Toast.LENGTH_SHORT).show();
-        }
 
-    }
-    public void consultarEnLaBase(){
-        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "administracion", null,1);
+    public int consultarJugadorEnLaBase(String jugador){//devuelve el score del jugador
+        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "db", null,1);
         SQLiteDatabase baseDatos = admin.getWritableDatabase();
-        String nombre = nombre_jugador;
-        String puntuacion = tv_score.getText().toString();
-        ContentValues registro = new ContentValues();
-        registro.put("nombre", nombre);
-        registro.put("score", puntuacion);
+        String nombre = jugador;
 
         Cursor fila = baseDatos.rawQuery("select score, nombre from puntaje where nombre ="+nombre,null);
-        if(fila.moveToFirst()) {
-            //COLOCAR LO QUE DESEA HACER CON LOS DATOS QUE OBTUVO DE LA BASE
-            tv_score.setText(fila.getString(0));
-            tv_nombre.setText(fila.getString(1));
+        if(fila.moveToFirst()){
+            int temp_score = fila.getInt(1);
+            baseDatos.close();
+            return temp_score;
+
         }else{
             Toast.makeText(this,"Datos no encontrados", Toast.LENGTH_SHORT).show();
-
+            baseDatos.close();
+            return 0;
         }
-        baseDatos.close();
-
     }
 
 

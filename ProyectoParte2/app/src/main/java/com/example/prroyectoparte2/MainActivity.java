@@ -1,5 +1,6 @@
 package com.example.prroyectoparte2;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -61,16 +62,18 @@ public class MainActivity extends AppCompatActivity {
         AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "db", null, 1);
         SQLiteDatabase DB = admin.getWritableDatabase();
 
-        Cursor consulta = DB.rawQuery("select * from puntaje where score = (select max(score) from puntaje)", null);
+       Cursor consulta = DB.rawQuery("select nombre, score from puntaje where score = (select MAX(score) from puntaje)", null);
+       // Cursor consulta = DB.rawQuery("select nombre,MAX(score) from puntaje", null);
+        //Cursor consulta = DB.rawQuery("select nombre, score from puntaje", new String[]{});
         if (consulta.moveToFirst()) {
             String temp_nombre = consulta.getString(0);
-            String temp_score = consulta.getString(1);
+            int temp_score = consulta.getInt(1);
             TextView textView = tv_bestScore;
             StringBuilder sb = new StringBuilder();
-            sb.append("Record: ");
-            sb.append(temp_score);
-            sb.append(" de ");
-            sb.append(temp_nombre);
+            sb.append("Record-> Puntaje: " + temp_score + " Jugador(a): " + temp_nombre);
+            //sb.append(temp_score);
+           // sb.append(" de ");
+            //sb.append(temp_nombre);
             textView.setText(sb.toString());
         }
         DB.close();
@@ -101,4 +104,27 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         //
     }
+
+
+    public void eliminarPuntajeEnLaBase(View vista){
+        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "db", null, 1);
+        SQLiteDatabase DB = admin.getWritableDatabase();
+        String nombre = et_nombre.getText().toString();
+
+        if (!nombre.isEmpty()) {
+            int cantidad = DB.delete("puntaje", "nombre=" + nombre,null);
+            if (cantidad == 1) {
+                Toast.makeText(this, "Se reinicio el puntaje", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "No tenia puntaje que reiniciar", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else {
+            Toast.makeText(this, "Primero debes escribir tu nombre", Toast.LENGTH_SHORT).show();
+            et_nombre.requestFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(this.et_nombre, InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
 }
