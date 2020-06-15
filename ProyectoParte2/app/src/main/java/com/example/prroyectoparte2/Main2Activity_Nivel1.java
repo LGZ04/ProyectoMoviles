@@ -20,7 +20,10 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
     private ImageView iv_dos, iv_uno, iv_vidas;
     private TextView tv_nombre, tv_score;
     private MediaPlayer mp, mp_bad, mp_great;
+    private MediaPlayer mp_nivel2, mp_nivel3, mp_nivel4;
     //probando
+
+
 
     int aleatorio1, aleatorio2, resultado, score, vidas = 3;
     String nombre_jugador, string_score, string_vidas;
@@ -51,6 +54,15 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
 
         mp_great = MediaPlayer.create(this, R.raw.wonderful);
         mp_bad = MediaPlayer.create(this, R.raw.bad);
+
+        /*
+        Codigo para cargar los archivos de auidos para los diferentes niveles
+        mp_nivel2 = MediaPlayer.create(this, R.raw.AMUSEMENT);
+        mp_nivel3 = MediaPlayer.create(this, R.raw.BOB_PARTY);
+        mp_nivel4 = MediaPlayer.create(this, R.raw.CHILDREN_S_GAMES);
+        mp_nivel2 = MediaPlayer.create(this, R.raw.AMUSEMENT);
+        
+         */
         numeroAleatorio();
     }
 
