@@ -48,6 +48,10 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
         nombre_jugador = getIntent().getStringExtra("jugador");
         tv_nombre.setText("Jugador: "+ nombre_jugador);
 
+        score = Integer.parseInt(getIntent().getStringExtra("score"));// le asigno el score que le pase por el intent
+        string_score = getIntent().getStringExtra("score");
+
+        tv_score.setText("Score: " + string_score);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
 

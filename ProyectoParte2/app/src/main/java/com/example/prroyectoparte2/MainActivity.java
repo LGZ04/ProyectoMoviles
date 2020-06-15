@@ -58,25 +58,8 @@ public class MainActivity extends AppCompatActivity {
             id = getResources().getIdentifier("uva","drawable", getPackageName());
             iv_personaje.setImageResource(id);
         }
+        metodoRecord();
 
-        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "db", null, 1);
-        SQLiteDatabase DB = admin.getWritableDatabase();
-
-       Cursor consulta = DB.rawQuery("select nombre, score from puntaje where score = (select MAX(score) from puntaje)", null);
-       // Cursor consulta = DB.rawQuery("select nombre,MAX(score) from puntaje", null);
-        //Cursor consulta = DB.rawQuery("select nombre, score from puntaje", new String[]{});
-        if (consulta.moveToFirst()) {
-            String temp_nombre = consulta.getString(0);
-            int temp_score = consulta.getInt(1);
-            TextView textView = tv_bestScore;
-            StringBuilder sb = new StringBuilder();
-            sb.append("Record-> Puntaje: " + temp_score + " Jugador(a): " + temp_nombre);
-            //sb.append(temp_score);
-           // sb.append(" de ");
-            //sb.append(temp_nombre);
-            textView.setText(sb.toString());
-        }
-        DB.close();
         mp = MediaPlayer.create(this, R.raw.alphabet_song);
         mp.start();
         mp.setLooping(true);
@@ -84,11 +67,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void jugar(View vista) {
         String nombre = et_nombre.getText().toString();
+        String score = String.valueOf(consultarJugadorEnLaBase(nombre));
         if (!nombre.isEmpty()) {
             mp.stop();
             mp.release();
             Intent intent = new Intent(this, Main2Activity_Nivel1.class);
             intent.putExtra("jugador", nombre);
+            intent.putExtra("score", score);
             startActivity(intent);
             finish();
         }
@@ -109,11 +94,12 @@ public class MainActivity extends AppCompatActivity {
     public void eliminarPuntajeEnLaBase(View vista){
         AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "db", null, 1);
         SQLiteDatabase DB = admin.getWritableDatabase();
-        String nombre = et_nombre.getText().toString();
+        String nombres = et_nombre.getText().toString();
 
-        if (!nombre.isEmpty()) {
-            int cantidad = DB.delete("puntaje", "nombre=" + nombre,null);
+        if (!nombres.isEmpty()) {
+            int cantidad = DB.delete("puntaje", "nombre"+"='"+nombres+"'",null);
             if (cantidad == 1) {
+                metodoRecord();
                 Toast.makeText(this, "Se reinicio el puntaje", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "No tenia puntaje que reiniciar", Toast.LENGTH_SHORT).show();
@@ -133,11 +119,11 @@ public class MainActivity extends AppCompatActivity {
     public int consultarJugadorEnLaBase(String jugador){
         AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "db", null,1);
         SQLiteDatabase baseDatos = admin.getWritableDatabase();
-        String nombre = jugador;
 
-        Cursor fila = baseDatos.rawQuery("select score, nombre from puntaje where nombre ="+nombre,null);
+        Cursor fila = baseDatos.rawQuery("select score, nombre FROM " + "puntaje" + " WHERE "+"nombre"+"='"+jugador+"'",null);
+
         if(fila.moveToFirst()){
-            int temp_score = fila.getInt(1);
+            int temp_score = fila.getInt(0);
             baseDatos.close();
             return temp_score;
 
@@ -147,4 +133,27 @@ public class MainActivity extends AppCompatActivity {
             return 0;
         }
     }
+
+    public void metodoRecord(){
+        AdminSQLiteHelper admin = new AdminSQLiteHelper(this, "db", null, 1);
+        SQLiteDatabase DB = admin.getWritableDatabase();
+
+        Cursor consulta = DB.rawQuery("select nombre, score from puntaje where score = (select MAX(score) from puntaje)", null);
+        // Cursor consulta = DB.rawQuery("select nombre,MAX(score) from puntaje", null);
+        //Cursor consulta = DB.rawQuery("select nombre, score from puntaje", new String[]{});
+        if (consulta.moveToFirst()) {
+            String temp_nombre = consulta.getString(0);
+            int temp_score = consulta.getInt(1);
+            TextView textView = tv_bestScore;
+            StringBuilder sb = new StringBuilder();
+            sb.append("Record-> Puntaje: " + temp_score + " Jugador(a): " + temp_nombre);
+            //sb.append(temp_score);
+            // sb.append(" de ");
+            //sb.append(temp_nombre);
+            textView.setText(sb.toString());
+        }
+        DB.close();
+    }
+
+
 }
