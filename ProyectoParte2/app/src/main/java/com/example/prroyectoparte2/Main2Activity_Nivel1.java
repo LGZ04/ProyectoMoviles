@@ -137,10 +137,17 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
             }
 
             if(operacion == "resta"){
+
+               // aleatorio1 = ThreadLocalRandom.current().nextInt(0, randomLimit-1);
+               // aleatorio2 = ThreadLocalRandom.current().nextInt(0, aleatorio1);
+
                 resultado = aleatorio1 - aleatorio2;
             }
 
             if(operacion == "multiplicacion"){
+
+                aleatorio1 = ThreadLocalRandom.current().nextInt(0, 10);
+                aleatorio2 = ThreadLocalRandom.current().nextInt(0, 4);
                 resultado = aleatorio1 * aleatorio2;
             }
 
